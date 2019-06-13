@@ -1,1 +1,1 @@
-Image classification using skimage
+#PDIClassifier
