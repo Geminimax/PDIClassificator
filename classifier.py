@@ -34,11 +34,32 @@ for image_dir in os.listdir(image_dir_path):
                 current_image_count = 0
                 break
 
-print(labels)
+#print(labels)
 #Takes about a billion years to be done
 
 #for image in images:
 #    show(image)
+
+def apply_model(datasets, labels):
+	##SVM model generation
+    model = svm.LinearSVC(C=100)
+    model.fit(datasets,labels)
+    
+    ##Test
+    test_image_count = 20
+    test_images = []
+    expected = []
+    
+    predict = model.predict(datasets)
+    
+    correct = 0
+    for i in range(len(predict)):
+        print("Prediction: " + predict[i] + "  Expected: " + labels[i])
+        if(predict[i] == labels[i]):
+            correct += 1
+            
+    print(str(correct) + "/" + str(len(predict)))
+
 def extract_lbp(image,radius,n_points):
     ##Function for lbp feature extraction
     gray_image = color.rgb2gray(image)
@@ -47,28 +68,34 @@ def extract_lbp(image,radius,n_points):
                         range=(0, n_points),normed = True)[0]
     return hist
 
-radius = 3
-n_points = radius * 8
+def using_lbp(image_list, labels):
+    radius = 3
+    n_points = radius * 8
+    
+    datasets = []
+    for image in image_list:
+        datasets.append(extract_lbp(image,radius,n_points))
+    
+    apply_model(datasets, labels)
 
-datasets = []
-for image in image_list:
-    datasets.append(extract_lbp(image,radius,n_points))
+#using_lbp(image_list, labels)
 
-##SVM model generation
-model = svm.LinearSVC(C=100)
-model.fit(datasets,labels)
+## Function for hog feature extraction
+def extract_hog(image):
+	# feat is a feacture vector
+	# hog_image is the result of the tranformation,
+	# we can just throw it away, i think
+    feat, hog_image = feature.hog(image, visualize=True, feature_vector=True)
+#    show(hog_image)
+#    print(feat)
+    return feat
+    
+def using_hog(image_list, labels):
 
-##Test
-test_image_count = 20
-test_images = []
-expected = []
+    datasets = []
+    for image in image_list:
+        datasets.append(extract_hog(image))
+    
+    apply_model(datasets, labels)
 
-predict = model.predict(datasets)
-
-correct = 0
-for i in range(len(predict)):
-    print("Prediction: " + predict[i] + "  Expected: " + labels[i])
-    if(predict[i] == labels[i]):
-        correct += 1
-        
-print(str(correct) + "/" + str(len(predict)))
+using_hog(image_list, labels)
