@@ -44,10 +44,11 @@ class ImageBox(QFrame):
     def initUI(self):
         global image_box_size
         self.setFrameShape(QFrame.StyledPanel);
+        self.setFrameShadow(QFrame.Sunken)
         self.setLineWidth(1)
-        self.setMaximumWidth(image_box_size)
+        self.setMinimumWidth(image_box_size)
         self.setMaximumHeight(image_box_size)
-        self.setSizePolicy(QSizePolicy.MinimumExpanding,QSizePolicy.MinimumExpanding)
+        self.setSizePolicy(QSizePolicy.Minimum,QSizePolicy.MinimumExpanding)
         self.image_label.setAlignment(Qt.AlignCenter)
         self.text_label.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(self.image_label)
@@ -70,7 +71,7 @@ class ImageBox(QFrame):
 
 
 app = QApplication([])
-app.setStyle('Fusion')
+#app.setStyle('Fusion')
 window = QWidget()
 
 menu_frame = QFrame()
