@@ -32,33 +32,36 @@ image_limit_per_folder = 5
 #                current_image_count = 0
 #                break
 
-train_set = []
-test_set = []
-for image_dir in os.listdir(image_dir_path):
-    full_path = os.path.join(image_dir_path,image_dir)
-    
-    if os.path.isdir(full_path):
-        list_imgs = os.listdir(full_path)
-        num_imgs = len(list_imgs)
-        #Divides each fruit folder in two: training and test
-        image_limit_per_folder = num_imgs/2
-        current_image_count = 0
+
+
+def read_build_sets():
+    train_set = []
+    test_set = []
+    for image_dir in os.listdir(image_dir_path):
+        full_path = os.path.join(image_dir_path,image_dir)
         
-        #Assemble training set taking one random image per iteration
-        while(current_image_count < image_limit_per_folder):
-            random.seed(2010)
-            img_id = random.randint(0, num_imgs-1)
-            print(list_imgs[img_id])
-            image = io.imread(os.path.join(full_path, list_imgs.pop(img_id)))
-            train_set.append(image)
-            labels.append(image_dir)
-            current_image_count += 1
-            num_imgs-=1
-        
-        #Assemble testset with what is left of this directory
-        for image_file in list_imgs:
-            image = io.imread(os.path.join(full_path,image_file))
-            test_set.append(image)
+        if os.path.isdir(full_path):
+            list_imgs = os.listdir(full_path)
+            num_imgs = len(list_imgs)
+            #Divides each fruit folder in two: training and test
+            image_limit_per_folder = num_imgs/2
+            current_image_count = 0
+            
+            #Assemble training set taking one random image per iteration
+            while(current_image_count < image_limit_per_folder):
+                random.seed(2010)
+                img_id = random.randint(0, num_imgs-1)
+                print(list_imgs[img_id])
+                image = io.imread(os.path.join(full_path, list_imgs.pop(img_id)))
+                train_set.append(image)
+                labels.append(image_dir)
+                current_image_count += 1
+                num_imgs-=1
+            
+            #Assemble testset with what is left of this directory
+            for image_file in list_imgs:
+                image = io.imread(os.path.join(full_path,image_file))
+                test_set.append(image)
 
 #print(labels)
 #Takes about a billion years to be done
@@ -107,7 +110,7 @@ def extract_lbp(image):
                         range=(0, n_points + 2),density = True)[0]
     return hist
 
-generate_predictor(train_set, test_set, labels, extract_lbp)
+#generate_predictor(train_set, test_set, labels, extract_lbp)
 
 ## Function for hog feature extraction
 def extract_hog(image):
