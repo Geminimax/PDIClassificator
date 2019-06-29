@@ -3,11 +3,8 @@ from PyQt5.QtGui import (QPixmap)
 from functools import partial
 from PyQt5.QtCore import Qt
 from skimage import io
-from classifier import extract_hog,extract_lbp,extract_colorHist
-
-LBP = "Linear Binary Pattern"
-HOG = "Histogram of Oriented Gradients"
-COLOR_HIST = "Color Histogram"
+import classifier
+from classifier import extract_hog,extract_lbp,extract_colorHist,multiple_images_predict
 
 unclassified_labels = []
 current_column = 0
@@ -54,9 +51,9 @@ def classify(method_combo_box):
     method =  method_combo_box.currentText()
     print("Classifiying using : " + method)
     
-    if method == LBP:
+    if method == classifier.LBP:
         extract = extract_hog
-    elif method == HOG:
+    elif method == classifier.HOG:
         extract = extract_lbp
     else:
         extract = extract_colorHist
@@ -66,7 +63,7 @@ def classify(method_combo_box):
         images.append(extract(io.imread(label.image_path)))
     
     #Mudar esse metodo
-    classes = mock_svm(images)
+    classes = multiple_images_predict(images,method)
     
     for i in range(len(unclassified_labels)):
         unclassified_labels[i].setClassText(classes[i])
@@ -113,9 +110,10 @@ class ImageBox(QFrame):
         self.text_label.setText("Class : " + self.class_text)
 
 
-app = QApplication(["Image Classifier"])
+app = QApplication([])
 #app.setStyle('Fusion')
 window = QWidget()
+window.title = "Image Classifier"
 
 menu_frame = QFrame()
 menu_frame.setFrameShape(QFrame.StyledPanel)
@@ -145,9 +143,9 @@ image_grid.setSpacing(image_box_separator_size)
 scrollArea.setWidget(scrollAreaContent)
 
 combo_box = QComboBox()
-combo_box.addItem(LBP)
-combo_box.addItem(HOG)
-combo_box.addItem(COLOR_HIST)
+combo_box.addItem(classifier.LBP)
+combo_box.addItem(classifier.HOG)
+combo_box.addItem(classifier.COLOR_HIST)
 
 add_image_button = QPushButton('Add Images')
 add_image_button.clicked.connect(partial(file_picker, image_grid))

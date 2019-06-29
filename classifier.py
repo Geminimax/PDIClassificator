@@ -1,3 +1,17 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import skimage
+import os
+import joblib
+from skimage import color, feature, exposure
+
+LBP_PATH = "trained_models/knn_lbp.pkl"
+HOG_PATH = "trained_models/knn_hog.pkl"
+COLOR_HIST_PATH = "trained_models/knn_colorHist.pk"
+LBP = "Linear Binary Pattern"
+HOG = "Histogram of Oriented Gradients"
+COLOR_HIST = "Color Histogram"
+
 def extract_colorHist(image):
     img_f = skimage.img_as_float(image)
     hist_red = exposure.histogram(img_f[:,:,0].flatten(), nbins=8, normalize=True)[0]
@@ -44,26 +58,30 @@ def read_tests(image_dir_path):
 
     return fruits_test, labels_test
 
-def multiple_images_predict(images, descriptor, path):
+def multiple_images_predict(images, descriptor):
 
-	features_images = []
-	if descriptor == "LBP":
-		for image in images:
-			features_image.append(classifier_train.extract_lbp(image))
-	elif descriptor == "HOG":
-		for image in images:
-			features_image.append(classifier_train.extract_hog(image))
-	elif descriptor == "ColorHist":
-		for image in images:
-			features_image.append(classifier_train.extract_colorHist(image))
+    features_image = []
+    if descriptor == LBP:
+        path = LBP_PATH
+        for image in images:
+            features_image.append(extract_lbp(image))
+    elif descriptor == HOG:
+        path = HOG_PATH
+        for image in images:
+            features_image.append(extract_hog(image))
+    elif descriptor == COLOR_HIST:
+        path = COLOR_HIST_PATH
+        for image in images:
+            features_image.append(extract_colorHist(image))
 
-	model = joblib.load(path)
-	predict = model.predict(features_image)
+    model = joblib.load(path)
+    predict = model.predict(features_image)
 	   
-	correct = 0
-    for i in range(len(predict)):
-        print("Prediction: " + predict[i] + "  Expected: " + labels_test[i])
-        if(predict[i] == labels_test[i]):
-            correct += 1
-            
-    print(str(correct) + "/" + str(len(predict)))
+#    correct = 0
+#    for i in range(len(predict)):
+#        print("Prediction: " + predict[i] + "  Expected: " + labels_test[i])
+#        if(predict[i] == labels_test[i]):
+#            correct += 1
+#            
+#    print(str(correct) + "/" + str(len(predict)))
+    return predict
