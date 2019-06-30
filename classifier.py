@@ -1,4 +1,5 @@
 import numpy as np
+import mahotas as mh
 import matplotlib.pyplot as plt
 import skimage
 import os
@@ -7,10 +8,10 @@ from skimage import color, feature, exposure
 import os
 
 LBP_PATH = "trained_models/knn_lbp.pkl"
-HOG_PATH = "trained_models/knn_hog.pkl"
+HOG_PATH = "trained_models/knn_haralick.pkl"
 COLOR_HIST_PATH = "trained_models/knn_colorHist.pkl"
 LBP = "Linear Binary Pattern"
-HOG = "Histogram of Oriented Gradients"
+HARALICK = "Haralick Features"
 COLOR_HIST = "Color Histogram"
 
 def extract_colorHist(image):
@@ -26,13 +27,10 @@ def extract_colorHist(image):
     #hist = plt.hist(img_f.flatten(),bins=np.arange(0,8),normed = True)[0]
     return hist
 
-## Function for hog feature extraction
-def extract_hog(image):
-    # feat is the feacture vector
-    feat, hog_image = feature.hog(image, visualize=True, feature_vector=True)
-    # show(hog_image)
-    # print(feat)
-    return feat
+def extract_haralick(image):
+    haralick = mh.features.haralick(image)
+    haralick_mean = haralick.mean(axis=0)
+    return haralick_mean
 
 def extract_lbp(image):
     radius = 3
@@ -65,8 +63,8 @@ def multiple_images_predict(images, descriptor):
         path = LBP_PATH
         for image in images:
             features_image.append(extract_lbp(image))
-    elif descriptor == HOG:
-        path = HOG_PATH
+    elif descriptor == HARALICK:
+        path = HARALICK_PATH
         for image in images:
             features_image.append(extract_hog(image))
     elif descriptor == COLOR_HIST:

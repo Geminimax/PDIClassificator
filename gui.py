@@ -4,7 +4,7 @@ from functools import partial
 from PyQt5.QtCore import Qt
 from skimage import io
 import classifier
-from classifier import extract_hog,extract_lbp,extract_colorHist,multiple_images_predict
+from classifier import extract_haralick,extract_lbp,extract_colorHist,multiple_images_predict
 
 unclassified_labels = []
 current_column = 0
@@ -137,7 +137,7 @@ scrollArea.setWidget(scrollAreaContent)
 
 combo_box = QComboBox()
 combo_box.addItem(classifier.LBP)
-combo_box.addItem(classifier.HOG)
+combo_box.addItem(classifier.HARALICK)
 combo_box.addItem(classifier.COLOR_HIST)
 
 add_image_button = QPushButton('Add Images')
