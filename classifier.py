@@ -4,10 +4,11 @@ import skimage
 import os
 import joblib
 from skimage import color, feature, exposure
+import os
 
 LBP_PATH = "trained_models/knn_lbp.pkl"
 HOG_PATH = "trained_models/knn_hog.pkl"
-COLOR_HIST_PATH = "trained_models/knn_colorHist.pk"
+COLOR_HIST_PATH = "trained_models/knn_colorHist.pkl"
 LBP = "Linear Binary Pattern"
 HOG = "Histogram of Oriented Gradients"
 COLOR_HIST = "Color Histogram"
@@ -74,7 +75,7 @@ def multiple_images_predict(images, descriptor):
         for image in images:
             features_image.append(extract_colorHist(image))
 
-    model = joblib.load(path)
+    model = joblib.load(os.path.abspath(path))
     predict = model.predict(features_image)
 	   
 #    correct = 0

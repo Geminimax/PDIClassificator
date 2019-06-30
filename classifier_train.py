@@ -142,5 +142,5 @@ def extract_lbp(image):
     return hist
 
 #generate_predictor(fruits_train, fruits_test, labels_train, labels_test, extract_colorHist, 'knn_colorHist.pkl')
-generate_predictor(fruits_train, fruits_test, labels_train, labels_test, extract_hog, 'knn_hog.pkl')
-#generate_predictor(fruits_train, fruits_test, labels_train, labels_test, extract_lbp, 'knn_lbp.pkl')
+#generate_predictor(fruits_train, fruits_test, labels_train, labels_test, extract_hog, 'knn_hog.pkl')
+generate_predictor(fruits_train, fruits_test, labels_train, labels_test, extract_lbp, 'knn_lbp.pkl')
