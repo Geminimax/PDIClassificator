@@ -4,7 +4,7 @@ from functools import partial
 from PyQt5.QtCore import Qt
 from skimage import io
 import classifier
-from classifier import extract_haralick,extract_lbp,extract_colorHist,multiple_images_predict
+from classifier import multiple_images_predict
 
 unclassified_labels = []
 current_column = 0

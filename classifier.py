@@ -4,8 +4,7 @@ import matplotlib.pyplot as plt
 import skimage
 import os
 import joblib
-from skimage import color, feature, exposure
-import os
+from skimage import color, feature, exposure, io
 
 LBP_PATH = "trained_models/knn_lbp.pkl"
 HARALICK_PATH = "trained_models/knn_haralick.pkl"
@@ -13,6 +12,24 @@ COLOR_HIST_PATH = "trained_models/knn_colorHist.pkl"
 LBP = "Linear Binary Pattern"
 HARALICK = "Haralick Features"
 COLOR_HIST = "Color Histogram"
+
+def read_data(image_dir_path, load_image = False):
+    fruits = []
+    labels = []
+    for image_dir in os.listdir(image_dir_path):
+        full_path = os.path.join(image_dir_path,image_dir)
+
+        if os.path.isdir(full_path):
+            list_class_dir = os.listdir(full_path)
+
+            for image in list_class_dir:
+                if load_image:
+                    fruits.append(io.imread(os.path.join(full_path, image)))
+                else:
+                    fruits.append(os.path.join(full_path, image))
+                labels.append(image_dir)
+
+    return fruits, labels
 
 def extract_colorHist(image):
     img_f = skimage.img_as_float(image)
@@ -56,7 +73,7 @@ def read_tests(image_dir_path):
 
     return fruits_test, labels_test
 
-def multiple_images_predict(images, descriptor):
+def multiple_images_predict(images, descriptor, labels = None):
 
     features_image = []
     if descriptor == LBP:
@@ -75,11 +92,12 @@ def multiple_images_predict(images, descriptor):
     model = joblib.load(os.path.abspath(path))
     predict = model.predict(features_image)
 	   
-#    correct = 0
-#    for i in range(len(predict)):
-#        print("Prediction: " + predict[i] + "  Expected: " + labels_test[i])
-#        if(predict[i] == labels_test[i]):
-#            correct += 1
-#            
-#    print(str(correct) + "/" + str(len(predict)))
+    if labels is not None:
+        correct = 0
+        for i in range(len(predict)):
+            print("Prediction: " + predict[i] + "  Expected: " + labels[i])
+            if(predict[i] == labels[i]):
+                correct += 1
+                
+        print(str(correct) + "/" + str(len(predict)))
     return predict
