@@ -106,7 +106,7 @@ class ImageBox(QFrame):
 app = QApplication([])
 #app.setStyle('Fusion')
 window = QWidget()
-window.title = "Image Classifier"
+window.setWindowTitle("Image Classifier")
 
 menu_frame = QFrame()
 menu_frame.setFrameShape(QFrame.StyledPanel)
