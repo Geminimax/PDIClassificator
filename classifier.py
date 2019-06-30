@@ -8,7 +8,7 @@ from skimage import color, feature, exposure
 import os
 
 LBP_PATH = "trained_models/knn_lbp.pkl"
-HOG_PATH = "trained_models/knn_haralick.pkl"
+HARALICK_PATH = "trained_models/knn_haralick.pkl"
 COLOR_HIST_PATH = "trained_models/knn_colorHist.pkl"
 LBP = "Linear Binary Pattern"
 HARALICK = "Haralick Features"
@@ -66,7 +66,7 @@ def multiple_images_predict(images, descriptor):
     elif descriptor == HARALICK:
         path = HARALICK_PATH
         for image in images:
-            features_image.append(extract_hog(image))
+            features_image.append(extract_haralick(image))
     elif descriptor == COLOR_HIST:
         path = COLOR_HIST_PATH
         for image in images:
