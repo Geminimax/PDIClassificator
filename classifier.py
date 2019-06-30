@@ -40,8 +40,7 @@ def extract_lbp(image):
     ##Function for lbp feature extraction
     gray_image = color.rgb2gray(image)
     lbp = feature.local_binary_pattern(gray_image, n_points, radius)
-    hist = plt.hist(lbp.ravel(),bins=np.arange(0, n_points + 3),
-                        range=(0, n_points + 2),density = True)[0]
+    hist = exposure.histogram(lbp, nbins=n_points, normalize = True)[0]
     return hist
 
 def read_tests(image_dir_path):
