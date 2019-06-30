@@ -51,16 +51,9 @@ def classify(method_combo_box):
     method =  method_combo_box.currentText()
     print("Classifiying using : " + method)
     
-    if method == classifier.LBP:
-        extract = extract_hog
-    elif method == classifier.HOG:
-        extract = extract_lbp
-    else:
-        extract = extract_colorHist
-    
     images = []
     for label in unclassified_labels:
-        images.append(extract(io.imread(label.image_path)))
+        images.append(io.imread(label.image_path))
     
     #Mudar esse metodo
     classes = multiple_images_predict(images,method)
